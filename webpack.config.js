@@ -4,14 +4,18 @@ var webpack = require('webpack')
 const NODE_ENV = process.env.NODE_ENV;
 
 module.exports = {
-  //entry: './src/main.js',
+  // entry: './src/main.js',
   // output: {
   //   path: path.resolve(__dirname, './dist'),
   //   publicPath: '/dist/',
   //   filename: 'build.js'
   // },
   entry: NODE_ENV == 'development' ? './src/main.js' : './src/myPlugin/index.js',
-	 output: {
+	 output:NODE_ENV == 'development' ?{
+    path: path.resolve(__dirname, './dist'),
+    publicPath: '/dist/',
+    filename: 'build.js'
+  } :{
 	 	path: path.resolve(__dirname, './dist'),
 	 	publicPath: '/dist/',//路径
 	 	filename: 'yc-chip.js',//打包之后的名称
@@ -82,7 +86,8 @@ module.exports = {
   },
   resolve: {
     alias: {
-      'vue$': 'vue/dist/vue.esm.js'
+      'vue$': 'vue/dist/vue.esm.js',
+      '@':path.resolve(__dirname,'./src'),
     },
     extensions: ['*', '.js', '.vue', '.json']
   },
