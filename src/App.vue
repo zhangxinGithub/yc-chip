@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <cropper class="paper" :config="pageConfig"/>
+    <cropper class="paper" :pageId="43"/>
   </div>
 </template>
  

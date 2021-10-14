@@ -1,41 +1,40 @@
 <template>
-  <div id="paper" class="paper" @click="select" />
+  <div id="paper" class="paper" />
 </template>
 
 <script>
-import Vue from 'vue';
-import echarts from '../../common/echartsConfig';
-import Utils from '../../common/utils';
-Vue.prototype.$echarts = echarts;
-Vue.prototype.$utils = Utils;
+import 'babel-polyfill';
+import echarts from '@/common/echartsConfig';
+import Utils from '@/common/utils';
+import {ajax} from '@/common/ajax';
 export default {
   name: 'YcChip',
   props: {
-    config: {
-      type: Object,
+    pageId: {
+      type: Number,
       default() {
-        return {};
+        return 0;
       },
     },
   },
   data() {
     return {
-      visible: false,
+      config: '',
       paper: null,
     };
   },
-  watch: {
-    config: {
-      handler(newVal, oldVal) {
-        console.log('config,config,config', newVal);
-        if (Object.keys(newVal).length === 0) return;
-        this.init();
-      },
-    },
-  },
+  // watch: {
+  //   config: {
+  //     handler(newVal, oldVal) {
+  //       console.log('config,config,config', newVal);
+  //       if (Object.keys(newVal).length === 0) return;
+  //       this.init();
+  //     },
+  //   },
+  // },
   mounted() {
     this.paper = document.getElementById('paper');
-    this.init();
+    this.getConfig()
   },
   methods: {
     init() {
@@ -45,9 +44,9 @@ export default {
           const div = document.createElement('div');
 
           div.id = `yc-1-${i}`;
-          this.$utils.setStyle(div, element[i].style);
+          Utils.setStyle(div, element[i].style);
           this.paper.appendChild(div);
-          const myChart = this.$echarts.init(div);
+          const myChart = echarts.init(div);
           const option = element[i].option;
 
           // 使用刚指定的配置项和数据显示图表。
@@ -60,6 +59,18 @@ export default {
       e.currentTarget.className += ' select-active';
       this.changeSelectComponent(true);
     },
+    async getConfig(){
+      const res = await ajax({
+        url: '/nbi/mgt/general/general/getOne',
+        method: 'POST',
+        data: { id:this.pageId },
+      });
+      if (res) {
+        this.config=JSON.parse(res.c1)
+        this.init();
+        
+      }
+    }
   },
 };
 </script>

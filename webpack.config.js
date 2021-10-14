@@ -1,5 +1,6 @@
 var path = require('path')
 var webpack = require('webpack')
+require('babel-polyfill');
 
 const NODE_ENV = process.env.NODE_ENV;
 
@@ -94,7 +95,18 @@ module.exports = {
   devServer: {
     historyApiFallback: true,
     noInfo: true,
-    overlay: true
+    overlay: true,
+    proxy: {
+      '/nbi': {
+        target: 'http://tnorbi.yccdn.com/nbi/',
+        // target: 'http://192.168.87.163:9088/',
+        changeOrigin: true,
+        ws: true,
+        pathRewrite: {
+          '^/nbi': '',
+        },
+      },
+    },
   },
   performance: {
     hints: false
